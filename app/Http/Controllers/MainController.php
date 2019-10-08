@@ -17,7 +17,7 @@ En Bash:
 
 En Zsh:
 <pre>
-    echo alias publish=\"curl -F file=@- https://publish.ip1.cc\" >> ~/.zsh
+    echo alias publish=\"curl -F file=@- https://publish.ip1.cc\" >> ~/.zshrc
 </pre>
 (y reiniciar el shell)
 
