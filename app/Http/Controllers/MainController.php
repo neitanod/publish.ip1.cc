@@ -36,10 +36,38 @@ Publicar un archivo:
 HERE;
     }
 
-    public function receiveFile(Request $request) {
-        $path = Storage::disk('public_uploads')->put('uploads', $request->file('file'));
-        if ($path) {
-            echo "https://publish.ip1.cc/storage/".$path."\n";
+    public function receiveData(Request $request) {
+
+        if( $request->file('file') ) {
+            $path = Storage::disk('public_uploads')->put('uploads', $request->file('file'));
+            if ($path) {
+                return response("https://publish.ip1.cc/storage/".$path."\n");
+            }
+        } elseif( $request->input('data') ) {
+            $data_key = md5(md5($request->input('data')));
+            $internal_path = 'uploads/'.$data_key.'.json';
+            $path = Storage::disk('public_uploads')->path($internal_path);
+                Storage::disk('public_uploads')->put($internal_path, $request->input('data'));
+            if ($path) {
+                return response("{\"key\": \"".$data_key."\", \"url\": \"https://publish.ip1.cc/storage/uploads/".$data_key.".json\"}\n")
+                    ->withHeaders([
+                        "Content-Type" => "application/json; charset=utf-8",
+                        "Access-Control-Allow-Origin" => "*",
+                        "Access-Control-Allow-Headers" => "Origin, X-Requested-With, Content-Type, Accept"
+                    ]);
+            }
+        } else {
+            return response("Nothing received under 'file' or 'data' keys\n");
         }
+    }
+
+    public function sendOptions() {
+        return response("")
+            ->withHeaders([
+                "Content-Type" => "application/json; charset=utf-8",
+                "Access-Control-Allow-Origin" => "*",
+                "Access-Control-Allow-Headers" => "Origin, X-Requested-With, Content-Type, Accept",
+                "Allow" => "GET,HEAD,POST"
+            ]);
     }
 }
