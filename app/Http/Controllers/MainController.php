@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Storage;
 
 class MainController extends Controller
 {
-    public function welcome(Request $request) {
+    public function welcome(Request $request)
+    {
         echo <<<HERE
 <h2>Para "instalar" el comando en la consola:</h2>
 En Bash:
@@ -18,6 +19,11 @@ En Bash:
 En Zsh:
 <pre>
     echo alias publish=\"curl -F file=@- https://publish.ip1.cc\" >> ~/.zshrc
+</pre>
+
+En Fish:
+<pre>
+    echo alias publish=\"curl -F file=@- https://publish.ip1.cc\" >> ~/.config/fish/config.fish
 </pre>
 (y reiniciar el shell)
 
@@ -36,14 +42,15 @@ Publicar un archivo:
 HERE;
     }
 
-    public function receiveData(Request $request) {
+    public function receiveData(Request $request)
+    {
 
-        if( $request->file('file') ) {
+        if ($request->file('file')) {
             $path = Storage::disk('public_uploads')->put('uploads', $request->file('file'));
             if ($path) {
                 return response("https://publish.ip1.cc/storage/".$path."\n");
             }
-        } elseif( $request->input('data') ) {
+        } elseif ($request->input('data')) {
             $data_key = md5(md5($request->input('data')));
             $internal_path = 'uploads/'.$data_key.'.json';
             $path = Storage::disk('public_uploads')->path($internal_path);
@@ -61,7 +68,8 @@ HERE;
         }
     }
 
-    public function sendOptions() {
+    public function sendOptions()
+    {
         return response("")
             ->withHeaders([
                 "Content-Type" => "application/json; charset=utf-8",
