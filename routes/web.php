@@ -12,4 +12,5 @@
 */
 
 Route::get('/', 'MainController@welcome');
-Route::post('/', 'MainController@receiveFile');
+Route::post('/', 'MainController@receiveData');
+Route::options('/', 'MainController@sendOptions');
